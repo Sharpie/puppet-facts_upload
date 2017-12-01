@@ -1,0 +1,17 @@
+{
+  "name": "sharpie-facts_upload",
+  "version": "0.0.1",
+  "author": "Charlie Sharpsteen",
+  "summary": "Re-implements the puppet facts upload command and associated Puppet Server endpoint.",
+  "license": "Apache-2.0",
+  "source": "",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 4.13.1 < 5.0.0"
+    }
+  ],
+  "pdk-version": "1.0.1",
+  "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-module-template.git",
+  "template-ref": "heads/master-0-g5db7961"
+}
