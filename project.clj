@@ -18,6 +18,7 @@
 
   :source-paths ["src/clj"]
   :resource-paths ["src/ruby"]
+  :test-paths ["test/integration"]
 
   :dependencies [[org.clojure/clojure]
 
@@ -48,9 +49,13 @@
                                   [puppetlabs/trapperkeeper nil :classifier "test" :scope "test"]
                                   [puppetlabs/kitchensink nil :classifier "test" :scope "test"]
 
+                                  [puppetlabs/http-client]
+
                                   [puppetlabs/puppetserver ~puppetserver-version :classifier "test" :scope "test"]]}
 
              :module {:jar-name "facts-upload.jar"}}
+
+  :test-selectors {:integration :integration}
 
   :aliases {"tk" ["trampoline" "run"
                   "--bootstrap-config" "dev-resources/facts-upload/bootstrap.cfg"
