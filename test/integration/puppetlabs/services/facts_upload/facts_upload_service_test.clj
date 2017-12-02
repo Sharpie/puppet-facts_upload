@@ -2,8 +2,16 @@
   (:require
     [clojure.test :refer :all]
     [clojure.java.io :as io]
+    [clojure.walk :as walk]
 
     [puppetlabs.http.client.sync :as http-client]
+    [me.raynes.fs :as fs]
+    ;; Zweikopf converts data between JRuby and Clojure objects.
+    ;; NOTE: To cut overhead, the tests below don't initialize zweikopf
+    ;; with a JRuby interpreter of it's own. This means that zweikopf/clojurize
+    ;; might blow up if passed exotic Ruby data structures like Rational or
+    ;; struct.
+    [zweikopf.core :as zweikopf]
 
     [puppetlabs.trapperkeeper.app :as tk-app]
     [puppetlabs.trapperkeeper.bootstrap :as tk-bootstrap]
@@ -27,6 +35,7 @@
 (def bootstrap-config (test-resource "facts-upload/bootstrap.cfg"))
 (def app-config (test-resource "facts-upload/config.conf"))
 (def logback-config (test-resource "facts-upload/logback-test.xml"))
+(def puppet-confdir (test-resource "facts-upload/fixtures/puppet"))
 
 (def listen-address "localhost")
 (def listen-port 18140)
@@ -57,7 +66,9 @@
 
       ;; The tests borrow one instance to generate test data, so we need
       ;; a second instance free to handle HTTP requests.
-      (assoc-in [:jruby-puppet :max-active-instances] 2)))
+      (assoc-in [:jruby-puppet :max-active-instances] 2)
+      (assoc-in [:jruby-puppet :master-var-dir] (fs/tmpdir))
+      (assoc-in [:jruby-puppet :master-conf-dir] puppet-confdir)))
 
 
 ;; Helper Functions
@@ -78,10 +89,21 @@
           jruby-instance (jruby-testutils/borrow-instance jruby-service :facts-upload-endpoint-test)
           container (:scripting-container jruby-instance)]
       (try
-        (let [facts (.runScriptlet container "Puppet::Node::Facts.new('test.certname').to_json")
-              response (PUT "/puppet/v3/facts/test.certname?environment=production"
-                            facts)]
+        (let [facts (.runScriptlet container "facts = Puppet::Node::Facts.new('puppet.node.test')
+                                              facts.values['foo'] = 'bar'
+                                              facts.to_json")
+              response (PUT "/puppet/v3/facts/puppet.node.test?environment=production" facts)]
+
           (testing "Puppet Server responds to PUT requests for /puppet/v3/facts"
-            (is (= 200 (:status response)))))
+            (is (= 200 (:status response))))
+
+          (testing "Puppet Server saves facts to the configured facts terminus"
+            ;; Ensure the test is configured properly
+            (is (= "yaml" (.runScriptlet container "Puppet::Node::Facts.indirection.terminus_class")))
+            (let [stored-facts (-> (.runScriptlet container "facts = Puppet::Node::Facts.indirection.find('puppet.node.test')
+                                                             facts.nil? ? {} : facts.to_data_hash")
+                                   (zweikopf/clojurize)
+                                   (walk/keywordize-keys))]
+              (is (= "bar" (get-in stored-facts [:values :foo]))))))
         (finally
           (jruby-testutils/return-instance jruby-service jruby-instance :facts-upload-endpoint-test))))))

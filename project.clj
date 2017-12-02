@@ -50,6 +50,9 @@
                                   [puppetlabs/kitchensink nil :classifier "test" :scope "test"]
 
                                   [puppetlabs/http-client]
+                                  [me.raynes/fs]
+                                  ;; Convert data between JRuby and Clojure objects.
+                                  [zweikopf "1.0.2" :exclusions [org.jruby/jruby-complete]]
 
                                   [puppetlabs/puppetserver ~puppetserver-version :classifier "test" :scope "test"]]}
 
