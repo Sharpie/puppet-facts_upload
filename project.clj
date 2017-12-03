@@ -56,7 +56,7 @@
 
                                   [puppetlabs/puppetserver ~puppetserver-version :classifier "test" :scope "test"]]}
 
-             :module {:jar-name "facts-upload.jar"}}
+             :puppet-module {:jar-name "facts-upload.jar"}}
 
   :test-selectors {:integration :integration}
 

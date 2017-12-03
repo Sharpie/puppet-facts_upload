@@ -1,6 +1,8 @@
 source ENV['GEM_SOURCE'] || 'https://rubygems.org'
 
-gem 'rake', '~> 12.0'
+gem 'rake',    '~> 12.0'
+# Used for the Puppet Module Tool
+gem 'puppet',  '~> 5.3'
 
 group :acceptance do
   gem 'beaker',                                                     '~> 3.29'
