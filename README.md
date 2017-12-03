@@ -1,4 +1,7 @@
-# Puppet Facts Upload
+Puppet Facts Upload
+===================
+
+[![Build Status](https://travis-ci.org/Sharpie/puppet-facts_upload.svg?branch=master)](https://travis-ci.org/Sharpie/puppet-facts_upload)
 
 **NOTE:** This module is currently a rough draft and should not be used.
 
