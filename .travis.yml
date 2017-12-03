@@ -1,0 +1,16 @@
+---
+language: clojure
+lein: 2.7.1
+sudo: false
+cache: bundler
+rvm: 2.4.1
+notifications:
+  email: false
+matrix:
+  include:
+    - jdk: openjdk8
+      bundler_args: '--without acceptance'
+      script: 'bundle exec rake test:integration'
+    - jdk: oraclejdk8
+      bundler_args: '--without acceptance'
+      script: 'bundle exec rake test:integration'
