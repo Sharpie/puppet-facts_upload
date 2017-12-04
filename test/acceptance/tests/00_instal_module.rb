@@ -8,5 +8,14 @@ step 'Copy module to master VM' do
   # Rakefile contains logic for building a tarball that contains an
   # assembled JAR.
   master.do_scp_to("pkg/#{module_tarball}", "/tmp/#{module_tarball}", {})
-  on(master, puppet('module', 'install', '--force', "/tmp/#{module_tarball}"))
+  # The uninstall is here to ensure we load in a fresh copy of the
+  # module if the tests are being re-run.
+  on(master, puppet('module', 'uninstall', 'sharpie-facts_upload'),
+    accept_all_exit_codes: true)
+  on(master, puppet('module', 'install', "/tmp/#{module_tarball}"))
+
+  apply_manifest_on(master, <<-EOM)
+service{'puppetserver': ensure => running}
+class{'facts_upload': }
+EOM
 end
