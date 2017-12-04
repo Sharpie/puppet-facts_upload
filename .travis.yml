@@ -15,3 +15,9 @@ matrix:
       script: 'bundle exec rake test:integration'
     - jdk: oraclejdk8
       script: 'bundle exec rake test:integration'
+    - jdk: openjdk8
+      sudo: required
+      services:
+        - docker
+      install: 'bundle install'
+      script: 'bundle exec rake test:acceptance'
