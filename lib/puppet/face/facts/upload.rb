@@ -1,8 +1,6 @@
 require 'puppet/face/facts'
 
-FACTS_FACE_VERSION = (Puppet::Face.find_action(:facts, :find).face.version.to_s).freeze
-
-Puppet::Face.define(:facts, FACTS_FACE_VERSION) do
+Puppet::Face.define(:facts, '0.0.1') do
   action(:upload) do
     summary "Upload local facts to the puppet master."
     description <<-'EOT'
