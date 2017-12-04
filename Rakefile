@@ -12,7 +12,9 @@ PUPPETSERVER_SUBMODULE = File.join('checkouts', 'puppetserver')
 PUPPETSERVER_JAR = File.join(PUPPETSERVER_SUBMODULE, 'target')
 
 FACTS_UPLOAD_JAR = File.join('target', 'facts-upload.jar')
-FACTS_UPLOAD_JAR_SRCS = Rake::FileList['src/**/*.clj', 'src/**/*.rb']
+FACTS_UPLOAD_JAR_SRCS = Rake::FileList['src/**/*.clj',
+                                       'src/**/*.rb',
+                                       PUPPETSERVER_JAR]
 
 FACTS_UPLOAD_MODULE = "pkg/#{MODULE_METADATA['name']}-#{MODULE_METADATA['version']}.tar.gz"
 FACTS_UPLOAD_MODULE_SRCS = Rake::FileList['metadata.json',
