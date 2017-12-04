@@ -1,5 +1,7 @@
 Gemfile.local
 Gemfile.lock
+/junit
+/log
 /target
 /pkg
 /classes

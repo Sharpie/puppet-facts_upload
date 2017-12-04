@@ -10,8 +10,10 @@ target/
 test/
 pom.xml
 project.clj
+Gemfile
 Gemfile.lock
 Gemfile.local
+Rakefile
 vendor/
 .vendor/
 spec/fixtures/manifests/
@@ -21,6 +23,7 @@ spec/fixtures/modules/
 .ruby-version
 coverage/
 log/
+junit/
 .idea/
 .dependencies/
 .librarian/

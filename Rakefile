@@ -15,7 +15,9 @@ FACTS_UPLOAD_JAR = File.join('target', 'facts-upload.jar')
 FACTS_UPLOAD_JAR_SRCS = Rake::FileList['src/**/*.clj', 'src/**/*.rb']
 
 FACTS_UPLOAD_MODULE = "pkg/#{MODULE_METADATA['name']}-#{MODULE_METADATA['version']}.tar.gz"
-FACTS_UPLOAD_MODULE_SRCS = Rake::FileList['manifests/**/*.pp', 'files/facts-upload.jar']
+FACTS_UPLOAD_MODULE_SRCS = Rake::FileList['manifests/**/*.pp',
+                                          'lib/**/*.rb',
+                                          'files/facts-upload.jar']
 
 namespace :puppetserver do
   desc "Build Puppet Server's JAR and install it to the local mvn repo"
@@ -39,11 +41,41 @@ namespace :build do
 end
 
 namespace :test do
-  desc 'Run leiningen integration tests'
+  desc 'Run Clojure integration tests'
   task :integration => PUPPETSERVER_JAR do
     sh 'lein test :integration'
   end
+
+  desc 'Run Beaker acceptance tests and clean up VMs afterwards'
+  task :acceptance => FACTS_UPLOAD_MODULE do
+    sh 'beaker', '--debug',
+      '--hosts', 'test/acceptance/config/redhat.yml',
+      '--pre-suite', 'test/acceptance/pre_suite',
+      '--tests', 'test/acceptance/tests'
+  end
+
+  desc 'Boot and run Beaker pre-suites leaving VMs staged for further tests'
+  task 'acceptance:stage' => FACTS_UPLOAD_MODULE do
+    sh 'beaker', '--debug',
+      '--hosts', 'test/acceptance/config/redhat.yml',
+      '--pre-suite', 'test/acceptance/pre_suite',
+      '--preserve-hosts=onpass'
+  end
+
+  desc 'Run Beaker acceptance tests on staged VMs'
+  task 'acceptance:rerun' => FACTS_UPLOAD_MODULE do
+    sh 'beaker', '--debug',
+      '--options-file', 'test/acceptance/beaker_config.rb',
+      # Ensures docker gem is loaded --^
+      '--hosts', 'log/latest/hosts_preserved.yml',
+      '--tests', 'test/acceptance/tests',
+      '--preserve-hosts=always',
+      '--no-validate', '--no-configure'
+  end
 end
+
+
+# Rules for ensuring files exist and are up to date.
 
 directory PUPPETSERVER_SUBMODULE do
   sh 'git submodule update --init --recursive'
