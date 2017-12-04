@@ -18,8 +18,7 @@
   if nothing terrible has happened to Java resource paths. Otherwise,
   returns nil which causes the wrap-with-monkeypatches handler to no-op."
   (when-let [monkeypatch (io/resource patchfile)]
-    (if (.exists (io/as-file monkeypatch))
-      monkeypatch)))
+    monkeypatch))
 
 
 (defn create-status-callback
