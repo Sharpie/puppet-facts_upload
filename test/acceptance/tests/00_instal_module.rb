@@ -8,5 +8,5 @@ step 'Copy module to master VM' do
   # Rakefile contains logic for building a tarball that contains an
   # assembled JAR.
   master.do_scp_to("pkg/#{module_tarball}", "/tmp/#{module_tarball}", {})
-  on(master, puppet('module', 'install', "/tmp/#{module_tarball}"))
+  on(master, puppet('module', 'install', '--force', "/tmp/#{module_tarball}"))
 end
