@@ -20,7 +20,10 @@ class facts_upload (
   }
 
   file {'/opt/puppetlabs/server/data/puppetserver/jars/facts-upload.jar':
-    ensure => file,
+    ensure => $ensure ? {
+      'present' => file,
+      'absent'  => absent,
+    },
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
@@ -30,12 +33,13 @@ class facts_upload (
   }
 
   puppet_authorization::rule {'node fact upload':
+    ensure               => $ensure,
     match_request_path   => '^/puppet/v3/facts/([^/]+)$',
     match_request_type   => 'regex',
     match_request_method => 'put',
     allow                => '$1',
     sort_order           => 601,
     path                 => '/etc/puppetlabs/puppetserver/conf.d/auth.conf',
-    notify => Service['puppetserver'],
+    notify               => Service['puppetserver'],
   }
 }
