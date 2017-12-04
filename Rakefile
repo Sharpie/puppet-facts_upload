@@ -63,7 +63,7 @@ namespace :test do
   end
 
   desc 'Run Beaker acceptance tests on staged VMs'
-  task 'acceptance:rerun' => FACTS_UPLOAD_MODULE do
+  task 'acceptance:run' => FACTS_UPLOAD_MODULE do
     sh 'beaker', '--debug',
       '--options-file', 'test/acceptance/beaker_config.rb',
       # Ensures docker gem is loaded --^
@@ -71,6 +71,15 @@ namespace :test do
       '--tests', 'test/acceptance/tests',
       '--preserve-hosts=always',
       '--no-validate', '--no-configure'
+  end
+
+  desc 'Clean up staged VMs'
+  task 'acceptance:destroy' do
+    sh 'beaker', '--debug',
+      '--options-file', 'test/acceptance/beaker_config.rb',
+      # Ensures docker gem is loaded --^
+      '--hosts', 'log/latest/hosts_preserved.yml',
+      '--preserve-hosts=never'
   end
 end
 
