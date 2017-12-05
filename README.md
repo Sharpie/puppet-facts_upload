@@ -4,7 +4,7 @@ Puppet Facts Upload
 [![Build Status](https://travis-ci.org/Sharpie/puppet-facts_upload.svg?branch=master)](https://travis-ci.org/Sharpie/puppet-facts_upload)
 
 This project re-implements the `puppet facts upload` command and part of the
-associated `pupept/v3/facts` endpoint that [was removed][PUP-2560] along with
+associated `/puppet/v3/facts` endpoint that [was removed][PUP-2560] along with
 the inventory service in Puppet 4.0. These pieces of functionality were useful
 for keeping facts updated outside of catalog compilation.
 
