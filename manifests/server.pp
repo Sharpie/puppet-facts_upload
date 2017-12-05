@@ -5,11 +5,13 @@ class facts_upload::server (
   Enum['present', 'absent'] $ensure = 'present',
 ) {
 
-  # FIXME: Bail if Puppet Server 5.x/PE 2017.x isn't in use.
-  # TODO: Support Puppet Server 2.6 -- 2.8/PE 2016.4.x -- 2017.2.x
-
   if fact('pe_server_version') =~ String {
     # PE configuration
+
+    # TODO: Support PE 2016.4 -- 2017.2
+    unless versioncmp(fact('pe_server_version'), '2017.3.0') >= 0 {
+      fail('The facts_upload::server class requires PE 2017.3 or newer.')
+    }
 
     if $ensure == 'present' {
       # PE needs a services.d directory added to the bootstrap path that can be
@@ -37,6 +39,9 @@ class facts_upload::server (
     $_puppetserver_service = Exec['pe-puppetserver service full restart']
   } else {
     # FOSS configuration
+
+    # FIXME: Fail if Puppet Server 5.x isn't in use.
+    # TODO: Support Puppet Server 2.6 -- 2.8
 
     $_puppetserver_service = Service['puppetserver']
     $_service_file_deps = []
