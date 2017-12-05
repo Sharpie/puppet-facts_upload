@@ -5,6 +5,7 @@
     [clojure.walk :as walk]
 
     [puppetlabs.http.client.sync :as http-client]
+    [cheshire.core :as json]
     [me.raynes.fs :as fs]
     ;; Zweikopf converts data between JRuby and Clojure objects.
     ;; NOTE: To cut overhead, the tests below don't initialize zweikopf
@@ -19,7 +20,8 @@
     [puppetlabs.trapperkeeper.testutils.bootstrap :as tst-bootstrap]
 
     ;; Provided by puppetlabs/puppetserver with the "test" classifier.
-    [puppetlabs.services.jruby.jruby-puppet-testutils :as jruby-testutils]))
+    [puppetlabs.services.jruby.jruby-puppet-testutils :as jruby-testutils]
+    [puppetlabs.services.facts-upload.facts-upload-service :as facts-upload]))
 
 
 ;; Test Configuration
@@ -82,8 +84,15 @@
                      :body body
                      :as :text}))
 
+(defn GET
+  [path]
+  (http-client/get (str base-url path)
+                    {:headers {"Accept" "application/json"}
+                     :ssl-ca-cert ca-cert
+                     :as :text}))
 
-(deftest ^:integration facts-upload-endpoint
+
+(deftest ^:integration facts-upload-service
   (tst-bootstrap/with-app-with-config app app-services base-config
     (let [jruby-service (tk-app/get-service app :JRubyPuppetService)
           jruby-instance (jruby-testutils/borrow-instance jruby-service :facts-upload-endpoint-test)
@@ -106,4 +115,10 @@
                                    (walk/keywordize-keys))]
               (is (= "bar" (get-in stored-facts [:values :foo]))))))
         (finally
-          (jruby-testutils/return-instance jruby-service jruby-instance :facts-upload-endpoint-test))))))
+          (jruby-testutils/return-instance jruby-service jruby-instance :facts-upload-endpoint-test)))
+
+      (testing "facts-upload plugin version number is available via status service"
+        (let [response (GET "/status/v1/services?level=debug")
+              body (-> response :body json/parse-string)]
+          (is (= 200 (:status response)))
+          (is (= facts-upload/version (get-in body ["facts-upload-service" "service_version"]))))))))
