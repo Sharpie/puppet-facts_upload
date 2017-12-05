@@ -1,7 +1,7 @@
-# Slots the facts_upload extension JAR into a PE install. Use this class by
-# adding it to the "PE Masters" group or otherwise applying it to a node
-# running PE or Open Source Puppet Server.
-class facts_upload (
+# Slots the facts_upload extension JAR into a Puppet Server install. Use this
+# class by adding it to the "PE Masters" group or otherwise applying it to a
+# node running PE or Open Source Puppet Server.
+class facts_upload::server (
   Enum['present', 'absent'] $ensure = 'present',
 ) {
 

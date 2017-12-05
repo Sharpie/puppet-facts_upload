@@ -21,6 +21,6 @@ if fact('pe_server_version') =~ String {
   service{'puppetserver': ensure => running}
 }
 
-class{'facts_upload': }
+class{'facts_upload::server': }
 EOM
 end
