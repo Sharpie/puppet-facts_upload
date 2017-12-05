@@ -15,7 +15,12 @@ step 'Copy module to master VM' do
   on(master, puppet('module', 'install', "/tmp/#{module_tarball}"))
 
   apply_manifest_on(master, <<-EOM)
-service{'puppetserver': ensure => running}
+if fact('pe_server_version') =~ String {
+  include puppet_enterprise::profile::master
+} else {
+  service{'puppetserver': ensure => running}
+}
+
 class{'facts_upload': }
 EOM
 end

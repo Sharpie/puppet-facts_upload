@@ -43,46 +43,87 @@ namespace :build do
   end
 end
 
+acceptance_task_defaults = {
+  type: 'foss',
+  version: '2017.3.2',
+  platform: 'centos7',
+  hypervisor: 'docker'
+}
+
+def get_docker_image(platform)
+  case platform
+  when 'centos7'
+    'centos:centos7'
+  when 'centos6'
+    'centos:centos6'
+  when 'ubuntu1604'
+    'ubuntu:16.04'
+  else
+    raise ArgumentError, "No Docker image defined for platform: #{platform}"
+  end
+end
+
+def get_hostgenerator_string(args)
+  case args[:hypervisor]
+  when 'docker'
+    image = get_docker_image(args[:platform])
+    pe_source = "https://s3.amazonaws.com/pe-builds/released/#{args[:version]}"
+    "#{args[:platform]}-64mdca{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}"
+  else
+    raise ArgumentError, "No beaker-hostgenerator conversions defined for: #{args[:hypervisor]}"
+  end
+end
+
 namespace :test do
   desc 'Run Clojure integration tests'
   task :integration => PUPPETSERVER_JAR do
     sh 'lein test :integration'
   end
 
-  desc 'Run Beaker acceptance tests and clean up VMs afterwards'
-  task :acceptance => FACTS_UPLOAD_MODULE do
+  # TODO: Use rototiller to bring sanity to these Rake arguments.
+
+  desc 'One-shot run of Beaker acceptance tests that cleans up VMs afterwards'
+  task :acceptance, [:type, :platform, :version, :hypervisor] => FACTS_UPLOAD_MODULE do |_, args|
+    args.with_defaults(acceptance_task_defaults)
+
     sh 'beaker', '--debug',
-      '--hosts', 'test/acceptance/config/redhat.yml',
+      '--type', args[:type],
+      '--hosts', get_hostgenerator_string(args),
       '--pre-suite', 'test/acceptance/pre_suite',
       '--tests', 'test/acceptance/tests'
   end
 
-  desc 'Boot and run Beaker pre-suites leaving VMs staged for further tests'
-  task 'acceptance:stage' => FACTS_UPLOAD_MODULE do
-    sh 'beaker', '--debug',
-      '--hosts', 'test/acceptance/config/redhat.yml',
-      '--pre-suite', 'test/acceptance/pre_suite',
-      '--preserve-hosts=onpass'
-  end
+  namespace :acceptance do
+    desc 'Boot and run Beaker pre-suites leaving VMs staged for further tests'
+    task :stage, [:type, :platform, :version, :hypervisor] => FACTS_UPLOAD_MODULE do |_, args|
+      args.with_defaults(acceptance_task_defaults)
 
-  desc 'Run Beaker acceptance tests on staged VMs'
-  task 'acceptance:run' => FACTS_UPLOAD_MODULE do
-    sh 'beaker', '--debug',
-      '--options-file', 'test/acceptance/beaker_config.rb',
-      # Ensures docker gem is loaded --^
-      '--hosts', 'log/latest/hosts_preserved.yml',
-      '--tests', 'test/acceptance/tests',
-      '--preserve-hosts=always',
-      '--no-validate', '--no-configure'
-  end
+      sh 'beaker', '--debug',
+        '--type', args[:type],
+        '--hosts', get_hostgenerator_string(args),
+        '--pre-suite', 'test/acceptance/pre_suite',
+        '--preserve-hosts=onpass'
+    end
 
-  desc 'Clean up staged VMs'
-  task 'acceptance:destroy' do
-    sh 'beaker', '--debug',
-      '--options-file', 'test/acceptance/beaker_config.rb',
-      # Ensures docker gem is loaded --^
-      '--hosts', 'log/latest/hosts_preserved.yml',
-      '--preserve-hosts=never'
+    desc 'Run Beaker acceptance tests on staged VMs'
+    task :run => FACTS_UPLOAD_MODULE do |_, args|
+      sh 'beaker', '--debug',
+        '--options-file', 'test/acceptance/beaker_config.rb',
+        # Ensures docker gem is loaded --^
+        '--hosts', 'log/latest/hosts_preserved.yml',
+        '--tests', 'test/acceptance/tests',
+        '--preserve-hosts=always',
+        '--no-validate', '--no-configure'
+    end
+
+    desc 'Clean up staged VMs'
+    task :destroy do
+      sh 'beaker', '--debug',
+        '--options-file', 'test/acceptance/beaker_config.rb',
+        # Ensures docker gem is loaded --^
+        '--hosts', 'log/latest/hosts_preserved.yml',
+        '--preserve-hosts=never'
+    end
   end
 end
 

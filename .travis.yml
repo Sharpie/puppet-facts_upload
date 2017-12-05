@@ -20,4 +20,10 @@ matrix:
       services:
         - docker
       install: 'bundle install'
-      script: 'bundle exec rake test:acceptance'
+      script: "bundle exec rake 'test:acceptance[foss]'"
+    - jdk: openjdk8
+      sudo: required
+      services:
+        - docker
+      install: 'bundle install'
+      script: "bundle exec rake 'test:acceptance[pe]'"

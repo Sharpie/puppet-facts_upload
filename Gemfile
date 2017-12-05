@@ -6,6 +6,8 @@ group :acceptance do
   gem 'beaker',                                                     '~> 3.29'
   gem 'beaker-docker',                                              '~> 0.2'
   gem 'beaker-puppet',                                              '~> 0.8'
+  gem 'beaker-pe',                                                  '~> 1.26'
+  gem 'beaker-hostgenerator',                                       '~> 1.1'
 
   # Used for the Puppet Module Tool
   gem 'puppet',                                                     '~> 5.3'
