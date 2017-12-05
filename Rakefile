@@ -63,12 +63,19 @@ def get_docker_image(platform)
   end
 end
 
-def get_hostgenerator_string(args)
+def get_hypervisor_args(args)
   case args[:hypervisor]
   when 'docker'
     image = get_docker_image(args[:platform])
     pe_source = "https://s3.amazonaws.com/pe-builds/released/#{args[:version]}"
-    "#{args[:platform]}-64mdca{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}"
+
+    ['--hosts',
+     "#{args[:platform]}-64mdca{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}"]
+  when 'vmpooler'
+    pe_source = "http://pe-releases.puppetlabs.lan/#{args[:version]}"
+    ['--hosts',
+     "#{args[:platform]}-64mdca{pe_dir=#{pe_source},pe_ver=#{args[:version]}}",
+     '--keyfile', '~/.ssh/id_rsa-acceptance']
   else
     raise ArgumentError, "No beaker-hostgenerator conversions defined for: #{args[:hypervisor]}"
   end
@@ -88,9 +95,9 @@ namespace :test do
 
     sh 'beaker', '--debug',
       '--type', args[:type],
-      '--hosts', get_hostgenerator_string(args),
       '--pre-suite', 'test/acceptance/pre_suite',
-      '--tests', 'test/acceptance/tests'
+      '--tests', 'test/acceptance/tests',
+      *get_hypervisor_args(args)
   end
 
   namespace :acceptance do
@@ -100,9 +107,9 @@ namespace :test do
 
       sh 'beaker', '--debug',
         '--type', args[:type],
-        '--hosts', get_hostgenerator_string(args),
         '--pre-suite', 'test/acceptance/pre_suite',
-        '--preserve-hosts=onpass'
+        '--preserve-hosts=onpass',
+        *get_hypervisor_args(args)
     end
 
     desc 'Run Beaker acceptance tests on staged VMs'
