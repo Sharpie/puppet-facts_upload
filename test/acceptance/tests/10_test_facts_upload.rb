@@ -5,6 +5,7 @@ step 'Test Puppet Facts upload' do
   create_remote_file(hosts, '/etc/facter/facts.d/test_fact.txt', 'test_fact=foo')
 
   on(hosts, puppet('facts', 'upload'))
+  sleep(1) # Give PDB some time to process the upload
 end
 
 step 'Check PuppetDB for uploaded facts' do
