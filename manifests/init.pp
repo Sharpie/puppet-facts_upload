@@ -22,9 +22,10 @@ class facts_upload (
       # potential duplicate resource issue if this sort of extension module
       # gets repeated for a different use case.
       exec {'ensure puppetserver services.d directory existance':
-        command => '/usr/bin/mkdir -m 0755 -p /etc/puppetlabs/puppetserver/services.d',
+        command => 'mkdir -m 0755 -p /etc/puppetlabs/puppetserver/services.d',
         creates => '/etc/puppetlabs/puppetserver/services.d',
         umask   => '0022',
+        path    => '/bin:/usr/bin',
         user    => 'root',
       }
 
