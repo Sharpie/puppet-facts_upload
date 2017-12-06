@@ -4,6 +4,10 @@
 class facts_upload::server (
   Enum['present', 'absent'] $ensure = 'present',
 ) {
+  $_file_ensure = $ensure ? {
+    'present' => file,
+    'absent'  => absent,
+  }
 
   if fact('pe_server_version') =~ String {
     # PE configuration
@@ -16,7 +20,7 @@ class facts_upload::server (
     if $ensure == 'present' {
       # PE needs a services.d directory added to the bootstrap path that can be
       # used to slot in additional services.
-      Pe_ini_setting <| title == "puppetserver initconf bootstrap_config" |> {
+      Pe_ini_setting <| title == 'puppetserver initconf bootstrap_config' |> {
         value => '/etc/puppetlabs/puppetserver/bootstrap.cfg,/etc/puppetlabs/puppetserver/services.d/'
       }
 
@@ -48,10 +52,7 @@ class facts_upload::server (
   }
 
   file {'/etc/puppetlabs/puppetserver/services.d/facts_upload.cfg':
-    ensure => $ensure ? {
-      'present' => file,
-      'absent'  => absent,
-    },
+    ensure  => $_file_ensure,
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
@@ -61,10 +62,7 @@ class facts_upload::server (
   }
 
   file {'/opt/puppetlabs/server/data/puppetserver/jars/facts-upload.jar':
-    ensure => $ensure ? {
-      'present' => file,
-      'absent'  => absent,
-    },
+    ensure => $_file_ensure,
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
