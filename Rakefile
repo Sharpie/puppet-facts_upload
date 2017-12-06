@@ -12,7 +12,8 @@ PUPPETSERVER_SUBMODULE = File.join('checkouts', 'puppetserver')
 PUPPETSERVER_JAR = File.join(PUPPETSERVER_SUBMODULE, 'target')
 
 FACTS_UPLOAD_JAR = File.join('target', 'facts-upload.jar')
-FACTS_UPLOAD_JAR_SRCS = Rake::FileList['src/**/*.clj',
+FACTS_UPLOAD_JAR_SRCS = Rake::FileList['project.clj',
+                                       'src/**/*.clj',
                                        'src/**/*.rb',
                                        PUPPETSERVER_JAR]
 
