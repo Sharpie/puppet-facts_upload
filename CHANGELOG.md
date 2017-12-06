@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 
+## [1.0.1] - 2017-12-06
+### Fixed
+
+  - Ruby patch code is only applied once per JRuby which prevents a
+    "stack level too deep" error caused by applying the patch multiple
+    times.
+
 
 ## [1.0.0] - 2017-12-05
 ### Added
@@ -31,4 +38,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 [Unreleased]: https://github.com/Sharpie/puppetserver-clj-file-server/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/Sharpie/puppetserver-clj-file-server/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Sharpie/puppetserver-clj-file-server/compare/5620a62...1.0.0
