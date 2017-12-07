@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [Unreleased]
+### Changed
 
+  - Add name of server receiving upload to messages logged by
+    `puppet facts upload`.
 
 ## [1.0.1] - 2017-12-06
 ### Fixed

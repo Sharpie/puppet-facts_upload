@@ -1,4 +1,5 @@
 require 'puppet/face/facts'
+require 'puppet/indirector/facts/rest'
 
 Puppet::Face.define(:facts, '0.0.1') do
   action(:upload) do
@@ -25,10 +26,12 @@ Puppet::Face.define(:facts, '0.0.1') do
     when_invoked do |options|
       Puppet::Node::Facts.indirection.terminus_class = :facter
       facts = Puppet::Node::Facts.indirection.find(Puppet[:certname])
+
       Puppet::Node::Facts.indirection.terminus_class = :rest
+      server = Puppet::Node::Facts::Rest.server
+      Puppet.notice "Uploading facts for '#{Puppet[:certname]}' to: '#{server}'"
+
       Puppet::Node::Facts.indirection.save(facts)
-      Puppet.notice "Uploaded facts for '#{Puppet[:certname]}'"
-      nil
     end
   end
 end
