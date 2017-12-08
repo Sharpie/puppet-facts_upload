@@ -6,6 +6,13 @@ require 'securerandom'
 RANDOM_VALUE = SecureRandom.base64.freeze
 master_fqdn = on(master, '/opt/puppetlabs/bin/facter fqdn').stdout.chomp
 
+step 'Configure puppet.conf for tests' do
+  # Set up puppet.conf such that the agent section contains the only valid
+  # hostname for the master.
+  on(hosts, puppet('config', 'set', '--section', 'main', 'server', 'test.invalid'))
+  on(hosts, puppet('config', 'set', '--section', 'agent', 'server', master_fqdn))
+end
+
 step 'Test Puppet Facts upload' do
   on(hosts, 'mkdir -p /etc/facter/facts.d')
   create_remote_file(hosts,

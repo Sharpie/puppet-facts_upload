@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Add name of server receiving upload to messages logged by
     `puppet facts upload`.
 
+  - Use SSL and server settings from the `agent` section of `puppet.conf
+    when running `puppet facts upload`.
+
+
 ## [1.0.1] - 2017-12-06
 ### Fixed
 
