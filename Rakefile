@@ -70,12 +70,13 @@ def get_hypervisor_args(args)
     image = get_docker_image(args[:platform])
     pe_source = "https://s3.amazonaws.com/pe-builds/released/#{args[:version]}"
 
+    # TODO: Consider cleaning this up into something a bit easier to read.
     ['--hosts',
-     "#{args[:platform]}-64mdca{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}"]
+     "#{args[:platform]}-64mdca{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}-64af{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}"]
   when 'vmpooler'
     pe_source = "http://pe-releases.puppetlabs.lan/#{args[:version]}"
     ['--hosts',
-     "#{args[:platform]}-64mdca{pe_dir=#{pe_source},pe_ver=#{args[:version]}}",
+     "#{args[:platform]}-64mdca{pe_dir=#{pe_source},pe_ver=#{args[:version]}}-64af{pe_dir=#{pe_source},pe_ver=#{args[:version]}}",
      '--keyfile', '~/.ssh/id_rsa-acceptance']
   else
     raise ArgumentError, "No beaker-hostgenerator conversions defined for: #{args[:hypervisor]}"

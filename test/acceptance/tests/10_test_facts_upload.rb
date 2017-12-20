@@ -13,6 +13,10 @@ step 'Configure puppet.conf for tests' do
   on(hosts, puppet('config', 'set', '--section', 'agent', 'server', master_fqdn))
 end
 
+step 'Run puppet agent to download plugins' do
+  on((agents - [master]), puppet('agent', '-t', '--server', master_fqdn))
+end
+
 step 'Test Puppet Facts upload' do
   on(hosts, 'mkdir -p /etc/facter/facts.d')
   create_remote_file(hosts,
