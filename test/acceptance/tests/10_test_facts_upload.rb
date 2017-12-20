@@ -24,7 +24,7 @@ step 'Test Puppet Facts upload' do
                      "facts_upload_test_value=#{RANDOM_VALUE}")
 
   on(hosts, puppet('facts', 'upload', '--server', master_fqdn))
-  sleep(1) # Give PDB some time to process the upload
+  sleep(2) # Give PDB some time to process the upload
 end
 
 step 'Check PuppetDB for uploaded facts' do
