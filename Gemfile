@@ -3,11 +3,7 @@ source ENV['GEM_SOURCE'] || 'https://rubygems.org'
 gem 'rake',    '~> 12.0'
 
 group :acceptance do
-  # Pinned for fixes that allow multiple Docker VMs to be persisted (BKR-1263).
-  # TODO: Unpin once the next beaker release ships.
-  gem 'beaker',
-    git: 'https://github.com/puppetlabs/beaker',
-    ref: '58bf28a'
+  gem 'beaker',                                                     '~> 3.30'
   gem 'beaker-docker',                                              '~> 0.2'
   gem 'beaker-puppet',                                              '~> 0.8'
   gem 'beaker-pe',                                                  '~> 1.26'
