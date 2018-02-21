@@ -19,6 +19,9 @@ FACTS_UPLOAD_JAR_SRCS = Rake::FileList['project.clj',
 
 FACTS_UPLOAD_MODULE = "pkg/#{MODULE_METADATA['name']}-#{MODULE_METADATA['version']}.tar.gz"
 FACTS_UPLOAD_MODULE_SRCS = Rake::FileList['metadata.json',
+                                          'CHANGELOG.md',
+                                          'LICENSE',
+                                          'README.md',
                                           'manifests/**/*.pp',
                                           'lib/**/*.rb',
                                           'files/facts-upload.jar']
