@@ -46,7 +46,7 @@ end
 
 acceptance_task_defaults = {
   type: 'foss',
-  version: '2017.3.2',
+  version: '2017.3.5',
   platform: 'centos7',
   hypervisor: 'docker'
 }
