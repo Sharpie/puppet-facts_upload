@@ -52,6 +52,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 [Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.2...HEAD
-[Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.1...1.0.2
+[1.0.2]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Sharpie/puppet-facts_upload/compare/5620a62...1.0.0
