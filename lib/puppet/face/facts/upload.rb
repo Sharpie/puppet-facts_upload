@@ -29,7 +29,12 @@ Puppet::Face.define(:facts, '0.0.1') do
       # etc. instead of `user` section settings.
       Puppet.settings.preferred_run_mode = :agent
       Puppet::Node::Facts.indirection.terminus_class = :facter
-      facts = Puppet::Node::Facts.indirection.find(Puppet[:certname])
+
+      facts = Puppet::Node::Facts.indirection.find(Puppet[:node_name_value])
+      unless Puppet[:node_name_fact].empty?
+        Puppet[:node_name_value] = facts.values[Puppet[:node_name_fact]]
+        facts.name = Puppet[:node_name_value]
+      end
 
       Puppet::Node::Facts.indirection.terminus_class = :rest
       server = Puppet::Node::Facts::Rest.server
