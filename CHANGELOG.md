@@ -5,15 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-
 ## [Unreleased]
-### Changed
 
-  - Add name of server receiving upload to messages logged by
+
+## [1.0.2] - 2018-02-21
+### Added
+
+  - Print name of server receiving upload to messages logged by
     `puppet facts upload`.
+
+### Fixed
 
   - Use SSL and server settings from the `agent` section of `puppet.conf
     when running `puppet facts upload`.
+
+  - Use Puppet's `node_name_value` and `node_name_fact` settings to match
+    behavior with `puppet agent` and `puppet apply`.
 
 
 ## [1.0.1] - 2017-12-06
@@ -44,6 +51,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Tests. Tests. Tests.
 
 
-[Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.2...HEAD
+[Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Sharpie/puppet-facts_upload/compare/5620a62...1.0.0
