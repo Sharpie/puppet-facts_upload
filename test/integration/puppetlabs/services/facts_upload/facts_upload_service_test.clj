@@ -17,6 +17,7 @@
     [puppetlabs.trapperkeeper.app :as tk-app]
     [puppetlabs.trapperkeeper.bootstrap :as tk-bootstrap]
     [puppetlabs.trapperkeeper.config :as tk-config]
+    [puppetlabs.trapperkeeper.services.status.status-core :as status-core]
     [puppetlabs.trapperkeeper.testutils.bootstrap :as tst-bootstrap]
 
     ;; Provided by puppetlabs/puppetserver with the "test" classifier.
@@ -25,6 +26,10 @@
 
 
 ;; Test Configuration
+
+(def puppetserver-version
+  "Version of Puppet Server that we are currently running against."
+  (status-core/get-artifact-version "puppetlabs" "puppetserver"))
 
 (defn test-resource
   "Locates a path within the registered Java resource directories and returns
@@ -93,6 +98,8 @@
 
 
 (deftest ^:integration facts-upload-service
+  (printf "Testing against Puppet Server version: %s%n" puppetserver-version)
+
   (tst-bootstrap/with-app-with-config app app-services base-config
     (let [jruby-service (tk-app/get-service app :JRubyPuppetService)
           jruby-instance (jruby-testutils/borrow-instance jruby-service :facts-upload-endpoint-test)

@@ -5,6 +5,13 @@ Dir.chdir(PROJECT_ROOT) # Ensure all paths expand relative to this Rakefile.
 
 MODULE_METADATA = JSON.parse(File.read('metadata.json'))
 
+# Set to a tagged version or other git ref.
+PUPPETSERVER_VERSION = if ENV.has_key?('PUPPETSERVER_VERSION')
+                         ENV['PUPPETSERVER_VERSION']
+                       else
+                         ENV['PUPPETSERVER_VERSION'] = '5.1.5'
+                         ENV['PUPPETSERVER_VERSION']
+                       end
 PUPPETSERVER_SUBMODULE = File.join('checkouts', 'puppetserver')
 PUPPETSERVER_PROJECT = File.join(PUPPETSERVER_SUBMODULE, 'project.clj')
 # FIXME: Figure out a way to actually find the Jarfile for the currently
@@ -28,6 +35,22 @@ FACTS_UPLOAD_MODULE_SRCS = Rake::FileList['metadata.json',
                                           'files/facts-upload.jar']
 
 namespace :puppetserver do
+  desc "Ensure Puppet Server submodule is at ref: #{PUPPETSERVER_VERSION}"
+  task :update => PUPPETSERVER_PROJECT do
+    Dir.chdir(PUPPETSERVER_SUBMODULE) do
+      # TODO: Raise useful error message if either of these commits does
+      #       not exist in the repo.
+      current_ref = `git rev-parse HEAD^{commit}`.chomp
+      target_ref = `git rev-parse #{PUPPETSERVER_VERSION}^{commit}`.chomp
+
+      if current_ref != target_ref
+        # Clear target directory to force a JAR rebuild.
+        sh 'rm -rf target'
+        sh "git reset --hard #{PUPPETSERVER_VERSION}"
+      end
+    end
+  end
+
   desc "Build Puppet Server's JAR and install it to the local mvn repo"
   task :install => PUPPETSERVER_PROJECT do
     Dir.chdir(PUPPETSERVER_SUBMODULE) do
@@ -89,7 +112,7 @@ end
 
 namespace :test do
   desc 'Run Clojure integration tests'
-  task :integration => PUPPETSERVER_JAR do
+  task :integration => ['puppetserver:update', PUPPETSERVER_JAR] do
     sh 'lein test :integration'
   end
 

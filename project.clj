@@ -1,6 +1,6 @@
 (def puppetserver-version
   "Version of Puppet Server to develop and test against"
-  "5.1.5")
+  (get (System/getenv) "PUPPETSERVER_VERSION" "5.1.5"))
 
 (defproject sharpie/facts-upload "1.0.2"
   :description "Puppet Server endpoint for the facts upload command"
