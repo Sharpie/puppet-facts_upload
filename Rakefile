@@ -6,6 +6,7 @@ Dir.chdir(PROJECT_ROOT) # Ensure all paths expand relative to this Rakefile.
 MODULE_METADATA = JSON.parse(File.read('metadata.json'))
 
 PUPPETSERVER_SUBMODULE = File.join('checkouts', 'puppetserver')
+PUPPETSERVER_PROJECT = File.join(PUPPETSERVER_SUBMODULE, 'project.clj')
 # FIXME: Figure out a way to actually find the Jarfile for the currently
 # checked out server version. However, this might require invoking lein
 # every time rake is invoked --- which is expensive.
@@ -28,7 +29,7 @@ FACTS_UPLOAD_MODULE_SRCS = Rake::FileList['metadata.json',
 
 namespace :puppetserver do
   desc "Build Puppet Server's JAR and install it to the local mvn repo"
-  task :install => PUPPETSERVER_SUBMODULE do
+  task :install => PUPPETSERVER_PROJECT do
     Dir.chdir(PUPPETSERVER_SUBMODULE) do
       sh 'lein install'
     end
@@ -142,11 +143,11 @@ end
 
 # Rules for ensuring files exist and are up to date.
 
-directory PUPPETSERVER_SUBMODULE do
+file PUPPETSERVER_PROJECT do
   sh 'git submodule update --init --recursive'
 end
 
-directory PUPPETSERVER_JAR => PUPPETSERVER_SUBMODULE do
+directory PUPPETSERVER_JAR => PUPPETSERVER_PROJECT do
   Rake::Task['puppetserver:install'].invoke
 end
 
