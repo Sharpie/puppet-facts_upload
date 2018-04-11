@@ -18,11 +18,20 @@ test_name 'Install PE' do
   end
 
   step 'Install Puppet Enterprise' do
-    install_pe_on(hosts, answers: {
-      'puppet_enterprise::puppet_master_host': '%{::trusted.certname}',
-      'pe_install::puppet_master_dnsaltnames': ['%{::trusted.certname}',
-                                                "#{master.hostname}",
-                                                'puppet']})
+    answers = {'puppet_enterprise::puppet_master_host': '%{::trusted.certname}',
+               'pe_install::puppet_master_dnsaltnames': ['%{::trusted.certname}',
+                                                         "#{master.hostname}",
+                                                         'puppet'],
+               'puppet_enterprise::master::puppetserver::jruby_max_active_instances': 1,
+               'puppet_enterprise::profile::master::java_args': {'Xmx': '256m',
+                                                                 'Xms': '128m'},
+               'puppet_enterprise::profile::puppetdb::java_args': {'Xmx': '128m',
+                                                                   'Xms': '64m'},
+               'puppet_enterprise::profile::console::java_args': {'Xmx': '96m',
+                                                                  'Xms': '64m'},
+               'puppet_enterprise::profile::orchestrator::java_args': {'Xmx': '64m',
+                                                                       'Xms': '64m'}}
+    install_pe_on(hosts, answers: answers)
     create_remote_file(master, '/etc/puppetlabs/puppet/autosign.conf', "*\n")
     on(master, 'chown pe-puppet /etc/puppetlabs/puppet/autosign.conf')
   end

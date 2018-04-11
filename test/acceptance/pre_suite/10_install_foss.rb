@@ -11,9 +11,41 @@ test_name 'Install FOSS Components' do
 
   step 'Install Puppet Server' do
     install_package(master, 'puppetserver')
-    on(master, puppet('resource', 'service', 'puppetserver', 'ensure=running'))
+
+    on(master, puppet('module', 'install', 'puppetlabs/inifile'))
+    on(master, puppet('module', 'install', 'puppetlabs/hocon'))
+
+    apply_manifest_on(master, <<-EOM)
+ini_subsetting {
+  default:
+    ensure            => present,
+    path              => '/etc/sysconfig/puppetserver',
+    section           => '',
+    setting           => 'JAVA_ARGS',
+    key_val_separator => '=',
+  ;
+  'Puppet Server min memory':
+    subsetting => '-Xms',
+    value      => '256m',
+  ;
+  'Puppet Server max memory':
+    subsetting => '-Xmx',
+    value      => '256m',
+  ;
+}
+
+hocon_setting {'Puppet Server num jrubies':
+  ensure  => present,
+  path    => '/etc/puppetlabs/puppetserver/conf.d/puppetserver.conf',
+  setting => 'jruby-puppet.max-active-instances',
+  value   => 1,
+}
+EOM
+
     create_remote_file(master, '/etc/puppetlabs/puppet/autosign.conf', "*\n")
     on(master, 'chown puppet /etc/puppetlabs/puppet/autosign.conf')
+
+    on(master, puppet('resource', 'service', 'puppetserver', 'ensure=running'))
   end
 
   step 'Install PuppetDB' do
