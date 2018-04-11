@@ -112,7 +112,7 @@ end
 
 namespace :test do
   desc 'Run Clojure integration tests'
-  task :integration => ['puppetserver:update', PUPPETSERVER_JAR] do
+  task :integration => PUPPETSERVER_JAR do
     sh 'lein test :integration'
   end
 
@@ -170,7 +170,7 @@ file PUPPETSERVER_PROJECT do
   sh 'git submodule update --init --recursive'
 end
 
-directory PUPPETSERVER_JAR => PUPPETSERVER_PROJECT do
+directory PUPPETSERVER_JAR => 'puppetserver:update' do
   Rake::Task['puppetserver:install'].invoke
 end
 
