@@ -27,10 +27,6 @@
 
 ;; Test Configuration
 
-(def puppetserver-version
-  "Version of Puppet Server that we are currently running against."
-  (status-core/get-artifact-version "puppetlabs" "puppetserver"))
-
 (defn test-resource
   "Locates a path within the registered Java resource directories and returns
   a fully qualified path"
@@ -98,7 +94,7 @@
 
 
 (deftest ^:integration facts-upload-service
-  (printf "Testing against Puppet Server version: %s%n" puppetserver-version)
+  (printf "Testing against Puppet Server version: %s%n" facts-upload/puppetserver-version)
 
   (tst-bootstrap/with-app-with-config app app-services base-config
     (let [jruby-service (tk-app/get-service app :JRubyPuppetService)
@@ -124,8 +120,15 @@
         (finally
           (jruby-testutils/return-instance jruby-service jruby-instance :facts-upload-endpoint-test)))
 
-      (testing "facts-upload plugin version number is available via status service"
+      (testing "facts-upload plugin is enabled appropriately"
         (let [response (GET "/status/v1/services?level=debug")
-              body (-> response :body json/parse-string)]
+              body (-> response :body json/parse-string)
+              ;; When run against an incompatible Puppet Server version, we
+              ;; expect the TK status service to return a response that does
+              ;; not reference the facts-upload service, i.e. nil, which
+              ;; indicates the service was not mounted.
+              expected-version (if (facts-upload/compatible-puppetserver-version?)
+                                   facts-upload/version
+                                   nil)]
           (is (= 200 (:status response)))
-          (is (= facts-upload/version (get-in body ["facts-upload-service" "service_version"]))))))))
+          (is (= expected-version (get-in body ["facts-upload-service" "service_version"]))))))))

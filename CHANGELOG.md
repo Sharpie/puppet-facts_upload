@@ -6,7 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
 
+  - The `facts_upload.jar` plugin will no longer activate when loaded by
+    a Puppet Server version that the plugin is not compatible with.
 
 ## [1.0.2] - 2018-02-21
 ### Added

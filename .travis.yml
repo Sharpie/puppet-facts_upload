@@ -14,12 +14,15 @@ matrix:
     - jdk: openjdk8
       script: 'bundle exec rake test:integration'
       env: PUPPETSERVER_VERSION=5.1.5
-    - jdk: openjdk8
-      script: 'bundle exec rake test:integration'
-      env: PUPPETSERVER_VERSION=5.2.0
     - jdk: oraclejdk8
       script: 'bundle exec rake test:integration'
       env: PUPPETSERVER_VERSION=5.1.5
+    - jdk: openjdk8
+      script: 'bundle exec rake test:integration'
+      env: PUPPETSERVER_VERSION=5.2.0
+    - jdk: openjdk8
+      script: 'bundle exec rake test:integration'
+      env: PUPPETSERVER_VERSION=5.3.0
 
     - jdk: openjdk8
       sudo: required
