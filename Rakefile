@@ -47,6 +47,7 @@ namespace :puppetserver do
         # Clear target directory to force a JAR rebuild.
         sh 'rm -rf target'
         sh "git reset --hard #{PUPPETSERVER_VERSION}"
+        sh 'git submodule update --init --recursive'
       end
     end
   end
