@@ -10,7 +10,7 @@ test_name 'Install FOSS Components' do
   end
 
   step 'Install Puppet Server' do
-    install_package(master, 'puppetserver')
+    install_package(master, 'puppetserver', master[:pe_ver])
 
     on(master, puppet('module', 'install', 'puppetlabs/inifile'))
     on(master, puppet('module', 'install', 'puppetlabs/hocon'))

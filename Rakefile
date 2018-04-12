@@ -73,7 +73,7 @@ end
 
 acceptance_task_defaults = {
   type: 'foss',
-  version: '2017.3.5',
+  version: PUPPETSERVER_VERSION,
   platform: 'centos7',
   hypervisor: 'docker'
 }

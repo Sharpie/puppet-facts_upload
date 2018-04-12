@@ -26,10 +26,19 @@ matrix:
       services:
         - docker
       install: 'bundle install'
-      script: "bundle exec rake 'test:acceptance[foss]'"
+      env: PUPPETSERVER_VERSION=5.1.5
+      script: "bundle exec rake 'test:acceptance[foss,centos7,5.1.5]'"
     - jdk: openjdk8
       sudo: required
       services:
         - docker
       install: 'bundle install'
-      script: "bundle exec rake 'test:acceptance[pe]'"
+      env: PUPPETSERVER_VERSION=5.2.0
+      script: "bundle exec rake 'test:acceptance[foss,centos7,5.2.0]'"
+    - jdk: openjdk8
+      sudo: required
+      services:
+        - docker
+      install: 'bundle install'
+      env: PUPPETSERVER_VERSION=5.1.5
+      script: "bundle exec rake 'test:acceptance[pe,centos7,2017.3.5]'"
