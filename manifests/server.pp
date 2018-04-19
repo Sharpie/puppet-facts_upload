@@ -4,20 +4,18 @@
 class facts_upload::server (
   Enum['present', 'absent'] $ensure = 'present',
 ) {
-  $_file_ensure = $ensure ? {
-    'present' => file,
-    'absent'  => absent,
-  }
-
   if fact('pe_server_version') =~ String {
     # PE configuration
-
     # TODO: Support PE 2016.4 -- 2017.2
-    unless versioncmp(fact('pe_server_version'), '2017.3.0') >= 0 {
-      fail('The facts_upload::server class requires PE 2017.3 or newer.')
+    if (versioncmp(fact('pe_server_version'), '2017.3.0') < 0) or
+       (versioncmp(fact('pe_server_version'), '2018.1.0') >= 0) {
+      warning("The facts_upload::server class only supports PE 2017.3 and should be removed from: ${trusted['certname']}")
+      $_ensure = absent
+    } else {
+      $_ensure = $ensure
     }
 
-    if $ensure == 'present' {
+    if $_ensure == 'present' {
       # PE needs a services.d directory added to the bootstrap path that can be
       # used to slot in additional services.
       Pe_ini_setting <| title == 'puppetserver initconf bootstrap_config' |> {
@@ -44,11 +42,16 @@ class facts_upload::server (
   } else {
     # FOSS configuration
 
-    # FIXME: Fail if Puppet Server 5.x isn't in use.
+    # FIXME: Fail if Puppet Server 5.1 or 5.2 isn't in use.
     # TODO: Support Puppet Server 2.6 -- 2.8
-
+    $_ensure = $ensure
     $_puppetserver_service = Service['puppetserver']
     $_service_file_deps = []
+  }
+
+  $_file_ensure = $_ensure ? {
+    'present' => file,
+    'absent'  => absent,
   }
 
   file {'/etc/puppetlabs/puppetserver/services.d/facts_upload.cfg':
@@ -72,7 +75,7 @@ class facts_upload::server (
   }
 
   puppet_authorization::rule {'node fact upload':
-    ensure               => $ensure,
+    ensure               => $_ensure,
     match_request_path   => '^/puppet/v3/facts/([^/]+)$',
     match_request_type   => 'regex',
     match_request_method => 'put',
