@@ -30,7 +30,7 @@ ini_subsetting {
   ;
   'Puppet Server max memory':
     subsetting => '-Xmx',
-    value      => '256m',
+    value      => '384m',
   ;
 }
 

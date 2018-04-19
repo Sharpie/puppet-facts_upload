@@ -23,7 +23,7 @@ test_name 'Install PE' do
                                                          "#{master.hostname}",
                                                          'puppet'],
                'puppet_enterprise::master::puppetserver::jruby_max_active_instances': 1,
-               'puppet_enterprise::profile::master::java_args': {'Xmx': '256m',
+               'puppet_enterprise::profile::master::java_args': {'Xmx': '384m',
                                                                  'Xms': '128m'},
                'puppet_enterprise::profile::puppetdb::java_args': {'Xmx': '128m',
                                                                    'Xms': '64m'},
