@@ -41,7 +41,7 @@ EOM
   apply_manifest_on(master, manifest, **change_expectation) do
     # In addition to no changes, we expect a warning message.
     if change_expectation.has_key?(:catch_changes)
-      assert_match(stderr, 'facts_upload::server class only supports PE 2017.3')
+      assert_match('facts_upload::server class only supports PE 2017.3', stderr)
     end
   end
 end
