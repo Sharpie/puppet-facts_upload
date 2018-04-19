@@ -71,7 +71,7 @@
 
           (assoc context :request-handler facts-handler)))
       (do
-        (log/errorf "The facts_upload module is not compatible with Puppet Server %s and should be removed from this node."
+        (log/warnf "The facts_upload plugin is not compatible with Puppet Server version %s and should be removed from this node. Skipping service initialization."
                     puppetserver-version)
         context)))
 
