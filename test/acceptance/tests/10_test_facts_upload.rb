@@ -23,7 +23,10 @@ step 'Test Puppet Facts upload' do
                      '/etc/facter/facts.d/test_fact.txt',
                      "facts_upload_test_value=#{RANDOM_VALUE}")
 
-  on(hosts, puppet('facts', 'upload', '--server', master_fqdn))
+  on(hosts, puppet('facts', 'upload', '--server', master_fqdn)) do
+    # Ensure we never override a built-in version of `puppet facts upload`
+    assert_no_match(/Warning: Redefining action upload/, stderr)
+  end
   sleep(2) # Give PDB some time to process the upload
 end
 

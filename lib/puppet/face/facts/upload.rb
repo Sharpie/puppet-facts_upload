@@ -1,6 +1,7 @@
 require 'puppet/face/facts'
 require 'puppet/indirector/facts/rest'
 
+unless  Puppet.features.facts_upload_builtin?
 Puppet::Face.define(:facts, '0.0.1') do
   action(:upload) do
     summary "Upload local facts to the puppet master."
@@ -43,4 +44,5 @@ Puppet::Face.define(:facts, '0.0.1') do
       Puppet::Node::Facts.indirection.save(facts)
     end
   end
+end
 end
