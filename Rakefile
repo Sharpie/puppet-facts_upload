@@ -53,7 +53,7 @@ namespace :puppetserver do
   end
 
   desc "Build Puppet Server's JAR and install it to the local mvn repo"
-  task :install => PUPPETSERVER_PROJECT do
+  task :install => 'puppetserver:update' do
     Dir.chdir(PUPPETSERVER_SUBMODULE) do
       sh 'lein install'
     end
@@ -178,7 +178,7 @@ file PUPPETSERVER_PROJECT do
   sh 'git submodule update --init --recursive'
 end
 
-directory PUPPETSERVER_JAR => 'puppetserver:update' do
+directory PUPPETSERVER_JAR => PUPPETSERVER_PROJECT do
   Rake::Task['puppetserver:install'].invoke
 end
 

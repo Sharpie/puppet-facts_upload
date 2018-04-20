@@ -8,6 +8,7 @@ notifications:
   email: false
 
 install: 'bundle install --without acceptance'
+before_script: 'bundle exec rake puppetserver:install'
 
 matrix:
   include:
