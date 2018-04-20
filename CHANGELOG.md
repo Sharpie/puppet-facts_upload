@@ -5,11 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.0.3] - 2018-04-19
 ### Fixed
 
   - The `facts_upload.jar` plugin will no longer activate when loaded by
     a Puppet Server version that the plugin is not compatible with.
+
+  - The `facts_upload` module will no longer re-define the `puppet facts upload`
+    command for Puppet versions 5.5 and higher.
 
 ## [1.0.2] - 2018-02-21
 ### Added
@@ -54,7 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Tests. Tests. Tests.
 
 
-[Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.2...HEAD
+[1.0.3]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Sharpie/puppet-facts_upload/compare/5620a62...1.0.0
