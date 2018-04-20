@@ -103,12 +103,12 @@ def get_hypervisor_args(args)
      "#{args[:platform]}-64mdca{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}-64af{hypervisor=docker,image=#{image},docker_cmd=/sbin/init,pe_dir=#{pe_source},pe_ver=#{args[:version]}}"]
   when 'vmpooler'
     pe_source = if args[:version].match(/g[0-9a-f]+$/)
-									# Pre-release build.
-									release_series = args[:version].split('.')[0..1].join('.')
-									"http://enterprise.delivery.puppetlabs.net/#{release_series}/ci-ready"
-								else
-									"http://pe-releases.puppetlabs.lan/#{args[:version]}"
-								end
+                  # Pre-release build.
+                  release_series = args[:version].split('.')[0..1].join('.')
+                  "http://enterprise.delivery.puppetlabs.net/#{release_series}/ci-ready"
+                else
+                  "http://pe-releases.puppetlabs.lan/#{args[:version]}"
+                end
 
     ['--hosts',
      "#{args[:platform]}-64mdca{pe_dir=#{pe_source},pe_ver=#{args[:version]}}-64af{pe_dir=#{pe_source},pe_ver=#{args[:version]}}",
