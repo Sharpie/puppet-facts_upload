@@ -11,7 +11,7 @@
 
   :min-lein-version "2.7.1"
 
-  :plugins [[lein-parent "0.3.1"]]
+  :plugins [[lein-parent "0.3.4"]]
 
   :parent-project {:coords [puppetlabs/clj-parent "1.7.1"]
                    :inherit [:managed-dependencies]}
