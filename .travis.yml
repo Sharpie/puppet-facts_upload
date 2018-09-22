@@ -26,8 +26,7 @@ matrix:
       env: PUPPETSERVER_VERSION=5.3.5
 
     # Open Source acceptance tests
-    - jdk: openjdk8
-      sudo: required
+    - sudo: required
       services:
         - docker
       install: 'bundle install'
@@ -35,15 +34,13 @@ matrix:
       #       5.1.5 instead.
       env: PUPPETSERVER_VERSION=5.1.5
       script: "bundle exec rake 'test:acceptance[foss,centos7,5.1.5]'"
-    - jdk: openjdk8
-      sudo: required
+    - sudo: required
       services:
         - docker
       install: 'bundle install'
       env: PUPPETSERVER_VERSION=5.2.0
       script: "bundle exec rake 'test:acceptance[foss,centos7,5.2.0]'"
-    - jdk: openjdk8
-      sudo: required
+    - sudo: required
       services:
         - docker
       install: 'bundle install'
@@ -51,15 +48,13 @@ matrix:
       script: "bundle exec rake 'test:acceptance[foss,centos7,5.3.5]'"
 
     # PE acceptance tests
-    - jdk: openjdk8
-      sudo: required
+    - sudo: required
       services:
         - docker
       install: 'bundle install'
       env: PUPPETSERVER_VERSION=5.1.6
       script: "bundle exec rake 'test:acceptance[pe,centos7,2017.3.10]'"
-    - jdk: openjdk8
-      sudo: required
+    - sudo: required
       services:
         - docker
       install: 'bundle install'
