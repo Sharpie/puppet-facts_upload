@@ -49,6 +49,10 @@ EOM
   end
 
   step 'Install PuppetDB' do
+    # FIXME: Currently pinned to 4.2.1 as puppetlabs_authorization 0.4.0
+    #        can't handle concat 5.0.0. Remove when that dependency is
+    #        fixed and upgraded.
+    on(master, puppet('module', 'install', 'puppetlabs/concat', '-v', '4.2.1'))
     on(master, puppet('module', 'install', 'puppetlabs/puppetdb'))
     apply_manifest_on(master, <<-EOM)
       class {'puppetdb':
