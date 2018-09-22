@@ -9,7 +9,7 @@ MODULE_METADATA = JSON.parse(File.read('metadata.json'))
 PUPPETSERVER_VERSION = if ENV.has_key?('PUPPETSERVER_VERSION')
                          ENV['PUPPETSERVER_VERSION']
                        else
-                         ENV['PUPPETSERVER_VERSION'] = '5.1.5'
+                         ENV['PUPPETSERVER_VERSION'] = '5.1.6'
                          ENV['PUPPETSERVER_VERSION']
                        end
 PUPPETSERVER_SUBMODULE = File.join('checkouts', 'puppetserver')

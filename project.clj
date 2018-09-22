@@ -1,6 +1,6 @@
 (def puppetserver-version
   "Version of Puppet Server to develop and test against"
-  (get (System/getenv) "PUPPETSERVER_VERSION" "5.1.5"))
+  (get (System/getenv) "PUPPETSERVER_VERSION" "5.1.6"))
 
 (defproject sharpie/facts-upload "1.0.3"
   :description "Puppet Server endpoint for the facts upload command"
@@ -13,7 +13,7 @@
 
   :plugins [[lein-parent "0.3.1"]]
 
-  :parent-project {:coords [puppetlabs/clj-parent "1.4.3"]
+  :parent-project {:coords [puppetlabs/clj-parent "1.7.1"]
                    :inherit [:managed-dependencies]}
 
   :source-paths ["src/clj"]
