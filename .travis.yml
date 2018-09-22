@@ -25,6 +25,7 @@ matrix:
       script: 'bundle exec rake test:integration'
       env: PUPPETSERVER_VERSION=5.3.5
 
+    # Open Source acceptance tests
     - jdk: openjdk8
       sudo: required
       services:
@@ -49,10 +50,18 @@ matrix:
       env: PUPPETSERVER_VERSION=5.3.5
       script: "bundle exec rake 'test:acceptance[foss,centos7,5.3.5]'"
 
+    # PE acceptance tests
     - jdk: openjdk8
       sudo: required
       services:
         - docker
       install: 'bundle install'
-      env: PUPPETSERVER_VERSION=5.1.5
-      script: "bundle exec rake 'test:acceptance[pe,centos7,2017.3.5]'"
+      env: PUPPETSERVER_VERSION=5.1.6
+      script: "bundle exec rake 'test:acceptance[pe,centos7,2017.3.10]'"
+    - jdk: openjdk8
+      sudo: required
+      services:
+        - docker
+      install: 'bundle install'
+      env: PUPPETSERVER_VERSION=5.3.5
+      script: "bundle exec rake 'test:acceptance[pe,centos7,2018.1.4]'"
