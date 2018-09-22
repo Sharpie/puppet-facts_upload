@@ -30,8 +30,10 @@ matrix:
       services:
         - docker
       install: 'bundle install'
-      env: PUPPETSERVER_VERSION=5.1.6
-      script: "bundle exec rake 'test:acceptance[foss,centos7,5.1.6]'"
+      # NOTE: 5.1.6 was not packaged for an Open Source release, so we test
+      #       5.1.5 instead.
+      env: PUPPETSERVER_VERSION=5.1.5
+      script: "bundle exec rake 'test:acceptance[foss,centos7,5.1.5]'"
     - jdk: openjdk8
       sudo: required
       services:
