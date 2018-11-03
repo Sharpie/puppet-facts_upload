@@ -11,8 +11,9 @@
 
   :min-lein-version "2.7.1"
 
-  :plugins [[lein-parent "0.3.4"]]
+  :plugins [[lein-parent "0.3.5"]]
 
+  ; clj-parent version used by puppetserver 5.1.6 / PE 2017.3.10
   :parent-project {:coords [puppetlabs/clj-parent "1.7.1"]
                    :inherit [:managed-dependencies]}
 
