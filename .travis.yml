@@ -1,7 +1,7 @@
 ---
 language: clojure
 lein: 2.7.1
-rvm: 2.4.1
+rvm: 2.4.4
 sudo: false
 cache: bundler
 notifications:
@@ -23,7 +23,7 @@ matrix:
       env: PUPPETSERVER_VERSION=5.2.0
     - jdk: openjdk8
       script: 'bundle exec rake test:integration'
-      env: PUPPETSERVER_VERSION=5.3.5
+      env: PUPPETSERVER_VERSION=5.3.6
 
     # Open Source acceptance tests
     - sudo: required
@@ -44,7 +44,7 @@ matrix:
       services:
         - docker
       install: 'bundle install'
-      env: PUPPETSERVER_VERSION=5.3.5
+      env: PUPPETSERVER_VERSION=5.3.6
       script: "bundle exec rake 'test:acceptance[foss,centos7,5.3.5]'"
 
     # PE acceptance tests
@@ -58,5 +58,5 @@ matrix:
       services:
         - docker
       install: 'bundle install'
-      env: PUPPETSERVER_VERSION=5.3.5
+      env: PUPPETSERVER_VERSION=5.3.6
       script: "bundle exec rake 'test:acceptance[pe,centos7,2018.1.4]'"
