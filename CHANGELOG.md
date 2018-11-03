@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     of puppetlabs-stdlib or puppetlabs-concat. This requires updating
     the puppetlabs-puppet_authorization module to 0.5.0 or newer.
 
+  - The module no longer triggers a "Could not autoload puppet/type/pe_ini_setting"
+    error when Code Manager is enabled.
 
 ## [1.0.3] - 2018-04-19
 ### Fixed

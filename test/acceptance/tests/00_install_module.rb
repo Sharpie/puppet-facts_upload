@@ -13,6 +13,11 @@ step 'Copy module to master VM' do
   on(master, puppet('module', 'uninstall', 'sharpie-facts_upload'),
     accept_all_exit_codes: true)
   on(master, puppet('module', 'install', "/tmp/#{module_tarball}"))
+
+  # Trigger type generation and reload puppetserver to flush cached types.
+  on(master, puppet('generate', 'types'))
+  master_service = master[:type].start_with?('foss') ? 'puppetserver' : 'pe-puppetserver'
+  bounce_service(master, master_service)
 end
 
 step 'Install module on master VM' do
