@@ -6,8 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
 
-No unreleased changes.
+  - The module can now be installed in environments using version 5.x
+    of puppetlabs-stdlib or puppetlabs-concat. This requires updating
+    the puppetlabs-puppet_authorization module to 0.5.0 or newer.
+
 
 ## [1.0.3] - 2018-04-19
 ### Fixed
