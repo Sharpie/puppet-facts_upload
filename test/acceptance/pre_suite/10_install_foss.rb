@@ -1,3 +1,5 @@
+require 'beaker-puppet'
+
 test_name 'Install FOSS Components' do
   extend Beaker::HostPrebuiltSteps
   confine :to, :type => 'foss'
