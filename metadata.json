@@ -1,6 +1,6 @@
 {
   "name": "sharpie-facts_upload",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Charlie Sharpsteen",
   "summary": "Re-implements the puppet facts upload command and associated Puppet Server endpoint.",
   "license": "Apache-2.0",

@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.0.4] - 2018-11-03
 ### Fixed
 
   - The module can now be installed in environments using version 5.x
@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Tests. Tests. Tests.
 
 
-[Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.3...master
+[1.0.4]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.0...1.0.1
