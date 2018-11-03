@@ -1,4 +1,5 @@
 require 'json'
+require 'rubygems/requirement'
 
 step 'Copy module to master VM' do
   metadata = JSON.parse(File.read('metadata.json'))
@@ -23,14 +24,11 @@ end
 step 'Install module on master VM' do
   # The module currently supports Puppet Server 5.1 and 5.2 as native
   # support for uploading facts was added in 5.3.
-  change_expectation = if master[:type].start_with?('foss') || master[:pe_ver].start_with?('2017.3')
-                         # Should not expect changes on FOSS 5.3, but there is
-                         # no built-in fact for reporting FOSS server versions,
-                         # so the manifest code can't respond to it.
-                         {expect_changes: true}
-                       else
-                         {catch_changes: true}
-                       end
+  expect_service_mounted = if Gem::Requirement.new('< 5.3').satisfied_by?(Gem::Version.new(ENV['PUPPETSERVER_VERSION']))
+                             true
+                           else
+                             false
+                           end
 
   manifest = <<-EOM
 if fact('pe_server_version') =~ String {
@@ -42,11 +40,14 @@ if fact('pe_server_version') =~ String {
 
 class{'facts_upload::server': }
 EOM
+  apply_manifest_on(master, manifest)
 
-  apply_manifest_on(master, manifest, **change_expectation) do
-    # In addition to no changes, we expect a warning message.
-    if change_expectation.has_key?(:catch_changes)
-      assert_match('facts_upload::server class only supports PE 2017.3', stderr)
-    end
+  status_check = "curl -k https://127.0.0.1:8140/status/v1/services"
+  response = JSON.parse(on(master, status_check).stdout.chomp)
+
+  if expect_service_mounted
+    refute_nil(response['facts-upload-service'])
+  else
+    assert_nil(response['facts-upload-service'])
   end
 end
