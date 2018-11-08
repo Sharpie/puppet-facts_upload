@@ -38,7 +38,7 @@
   []
   (if (nil? puppetserver-version)
     false
-    (and (>= puppetserver-version 5.1)
+    (and (>= puppetserver-version 2.6)
          (< puppetserver-version 5.3))))
 
 (defservice facts-upload-service

@@ -14,6 +14,9 @@ matrix:
   include:
     - jdk: openjdk8
       script: 'bundle exec rake test:integration'
+      env: PUPPETSERVER_VERSION=2.6.1
+    - jdk: openjdk8
+      script: 'bundle exec rake test:integration'
       env: PUPPETSERVER_VERSION=5.1.6
     - jdk: oraclejdk8
       script: 'bundle exec rake test:integration'

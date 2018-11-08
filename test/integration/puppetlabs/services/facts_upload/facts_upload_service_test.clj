@@ -76,11 +76,16 @@
 
 ;; Helper Functions
 
+(def fact-content-type
+  (if (< facts-upload/puppetserver-version 5.0)
+    "text/pson"
+    "application/json"))
+
 (defn PUT
   [path body]
   (http-client/put (str base-url path)
-                    {:headers {"Accept" "application/json"
-                               "Content-type" "application/json"}
+                    {:headers {"Accept" fact-content-type
+                               "Content-type" fact-content-type}
                      :ssl-ca-cert ca-cert
                      :body body
                      :as :text}))
@@ -88,7 +93,7 @@
 (defn GET
   [path]
   (http-client/get (str base-url path)
-                    {:headers {"Accept" "application/json"}
+                    {:headers {"Accept" fact-content-type}
                      :ssl-ca-cert ca-cert
                      :as :text}))
 
