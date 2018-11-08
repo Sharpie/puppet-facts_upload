@@ -23,8 +23,6 @@ Puppet::Face.define(:facts, '0.0.1') do
       $ puppet facts upload
     EOT
 
-    render_as :json
-
     when_invoked do |options|
       # Use `agent` sections  settings for certificates, Puppet Server URL,
       # etc. instead of `user` section settings.
@@ -42,6 +40,8 @@ Puppet::Face.define(:facts, '0.0.1') do
       Puppet.notice "Uploading facts for '#{Puppet[:certname]}' to: '#{server}'"
 
       Puppet::Node::Facts.indirection.save(facts)
+
+      nil
     end
   end
 end
