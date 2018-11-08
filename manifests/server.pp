@@ -6,19 +6,48 @@ class facts_upload::server (
 ) {
   if fact('pe_server_version') =~ String {
     # PE configuration
-    $_puppetserver_service = Exec['pe-puppetserver service full restart']
-    # TODO: Support PE 2016.4 -- 2017.2
-    if (versioncmp(fact('pe_server_version'), '2017.3.0') < 0) or
-        (versioncmp(fact('pe_server_version'), '2018.1.0') >= 0) {
-      warning("The facts_upload::server class only supports PE 2017.3 and should be removed from: ${trusted['certname']}")
+    if (versioncmp(fact('pe_server_version'), '2016.4.0') < 0) {
+      fail('The facts_upload::server class does not support PE versions older than 2016.4')
+    } elsif (versioncmp(fact('pe_server_version'), '2018.1.0') >= 0) {
+      warning("The facts_upload::server class does not support PE version 2018.1 or newer and should be removed from: ${trusted['certname']}")
       $_ensure = absent
     } else {
       $_ensure = $ensure
     }
 
+    if (versioncmp(fact('pe_server_version'), '2017.1.0') < 0) {
+      $_puppetserver_service = Service['pe-puppetserver']
+    } else {
+      $_puppetserver_service = Exec['pe-puppetserver service full restart']
+    }
+
+    if (versioncmp(fact('pe_server_version'), '2017.3.0') < 0) {
+      # PE Versions older than 2017.3 need some extra resources to ensure
+      # a directory for the JAR file is present and the CLASSPATH is
+      # configured to find it.
+      file {'/opt/puppetlabs/server/data/puppetserver/jars':
+        ensure => directory,
+        owner  => 'pe-puppet',
+        group  => 'pe-puppet',
+        mode   => '0700',
+      }
+
+      # FIXME: Due to EZBake packaging changes this actually isn't sufficient
+      #        for 2016.5, 2017.1, 2017.2, and some older versions of 2016.4.
+      #        The cli-defaults file is referenced by 2016.4.13, but older
+      #        versions may not have used it.
+      file {'/opt/puppetlabs/server/apps/puppetserver/cli/cli-defaults.sh':
+        ensure  => $_ensure,
+        owner   => 'pe-puppet',
+        group   => 'pe-puppet',
+        mode    => '0755',
+        content => 'CLASSPATH="${CLASSPATH}:/opt/puppetlabs/server/data/puppetserver/jars/*"',
+        require => File['/opt/puppetlabs/server/data/puppetserver/jars'],
+      }
+    }
+
     if $_ensure == 'present' {
       puppet_enterprise::trapperkeeper::bootstrap_cfg { 'facts-upload-service':
-        ensure    => $_ensure,
         namespace => 'puppetlabs.services.facts-upload.facts-upload-service',
         container => 'puppetserver',
         require   => Package['pe-puppetserver']
@@ -27,8 +56,7 @@ class facts_upload::server (
   } else {
     # FOSS configuration
     $_puppetserver_service = Service['puppetserver']
-    # FIXME: Fail if Puppet Server 5.1 or 5.2 isn't in use.
-    # TODO: Support Puppet Server 2.6 -- 2.8
+    # FIXME: Fail if Puppet Server 2.6 -- 5.2 isn't in use.
     $_ensure = $ensure
 
     file {'/etc/puppetlabs/puppetserver/services.d/facts_upload.cfg':
