@@ -9,7 +9,7 @@ class facts_upload::server (
     $_puppetserver_service = Exec['pe-puppetserver service full restart']
     # TODO: Support PE 2016.4 -- 2017.2
     if (versioncmp(fact('pe_server_version'), '2017.3.0') < 0) or
-       (versioncmp(fact('pe_server_version'), '2018.1.0') >= 0) {
+        (versioncmp(fact('pe_server_version'), '2018.1.0') >= 0) {
       warning("The facts_upload::server class only supports PE 2017.3 and should be removed from: ${trusted['certname']}")
       $_ensure = absent
     } else {
@@ -18,9 +18,9 @@ class facts_upload::server (
 
     if $_ensure == 'present' {
       puppet_enterprise::trapperkeeper::bootstrap_cfg { 'facts-upload-service':
+        ensure    => $_ensure,
         namespace => 'puppetlabs.services.facts-upload.facts-upload-service',
         container => 'puppetserver',
-        ensure    => $_ensure,
         require   => Package['pe-puppetserver']
       }
     }
