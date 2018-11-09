@@ -55,6 +55,12 @@ matrix:
       services:
         - docker
       install: 'bundle install'
+      env: PUPPETSERVER_VERSION=2.6.1
+      script: "bundle exec rake 'test:acceptance[pe,centos7,2016.4.15]'"
+    - sudo: required
+      services:
+        - docker
+      install: 'bundle install'
       env: PUPPETSERVER_VERSION=5.1.6
       script: "bundle exec rake 'test:acceptance[pe,centos7,2017.3.10]'"
     - sudo: required
