@@ -1,6 +1,8 @@
 require 'json'
 require 'rubygems/requirement'
 
+require 'beaker-puppet'
+
 step 'Copy module to master VM' do
   metadata = JSON.parse(File.read('metadata.json'))
   module_tarball = "#{metadata['name']}-#{metadata['version']}.tar.gz"

@@ -1,6 +1,8 @@
 require 'json'
 require 'securerandom'
 
+require 'beaker-puppet'
+
 # Using a random string allows this test to be re-run against staged Beaker VMs
 # without past successes showing up as false positives.
 RANDOM_VALUE = SecureRandom.base64.freeze

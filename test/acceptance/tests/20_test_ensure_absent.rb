@@ -1,5 +1,7 @@
 require 'json'
 
+require 'beaker-puppet'
+
 step 'Test ensure => absent' do
   manifest = <<-EOM
 if fact('pe_server_version') =~ String {
