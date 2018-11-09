@@ -1,3 +1,4 @@
+require 'yaml'
 require 'beaker-pe'
 
 test_name 'Install PE' do
@@ -31,6 +32,17 @@ test_name 'Install PE' do
                                                                   'Xms': '64m'},
                'puppet_enterprise::profile::orchestrator::java_args': {'Xmx': '64m',
                                                                        'Xms': '64m'}}
+
+    # Ensure memory tuning persists on older PE versions.
+    on(master, 'mkdir -p /etc/puppetlabs/code/environments/production/hieradata')
+    create_remote_file(master,
+                       '/etc/puppetlabs/code/environments/production/hieradata/common.yaml',
+                       answers.to_yaml)
+    on(master, 'mkdir -p /etc/puppetlabs/code/environments/production/data')
+    create_remote_file(master,
+                       '/etc/puppetlabs/code/environments/production/data/common.yaml',
+                       answers.to_yaml)
+
     install_pe_on(hosts, answers: answers)
     create_remote_file(master, '/etc/puppetlabs/puppet/autosign.conf', "*\n")
     on(master, 'chown pe-puppet /etc/puppetlabs/puppet/autosign.conf')
