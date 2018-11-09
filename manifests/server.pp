@@ -6,8 +6,13 @@ class facts_upload::server (
 ) {
   if fact('pe_server_version') =~ String {
     # PE configuration
-    if (versioncmp(fact('pe_server_version'), '2016.4.0') < 0) {
-      fail('The facts_upload::server class does not support PE versions older than 2016.4')
+    if (versioncmp(fact('pe_server_version'), '2016.4.10') < 0) {
+      fail('The facts_upload::server class does not support PE versions older than 2016.4.10')
+    } elsif (versioncmp(fact('pe_server_version'), '2016.5.0') >= 0) and
+            (versioncmp(fact('pe_server_version'), '2017.3.0') < 0) {
+      # TODO: The plugin actually works fine, just need to add the right Java
+      #       classpath twiddling to support these.
+      fail('The facts_upload::server class does not support PE versions 2016.5 -- 2017.2')
     } elsif (versioncmp(fact('pe_server_version'), '2018.1.0') >= 0) {
       warning("The facts_upload::server class does not support PE version 2018.1 or newer and should be removed from: ${trusted['certname']}")
       $_ensure = absent
@@ -34,8 +39,7 @@ class facts_upload::server (
 
       # FIXME: Due to EZBake packaging changes this actually isn't sufficient
       #        for 2016.5, 2017.1, 2017.2, and some older versions of 2016.4.
-      #        The cli-defaults file is referenced by 2016.4.13, but older
-      #        versions may not have used it.
+      #        Support for the cli-defaults file was backported to 2016.4.10.
       file {'/opt/puppetlabs/server/apps/puppetserver/cli/cli-defaults.sh':
         ensure  => $_ensure,
         owner   => 'pe-puppet',
