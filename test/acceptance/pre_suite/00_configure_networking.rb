@@ -9,16 +9,26 @@ test_name 'Ensure Docker networking is sane' do
   confine :to, :hypervisor => 'docker'
 
   step 'Sanitize /etc/hosts' do
+    # A variant of hack_etc_hosts that avoids setting empty domain names.
+    etc_hosts = "127.0.0.1\tlocalhost localhost.localdomain\n"
+
     hosts.each do |host|
-      # This is required to scrub out any malformed lines that got added by
-      # docker that will prevent a FQDN from showing up. The cp business is
-      # also required to handle the Docker COW filesystem.
-      on(host, 'cp /etc/hosts ~/hosts')
-      on(host, "sed -i '/#{host.name}/d' ~/hosts")
-      on(host, 'cp -f ~/hosts /etc/hosts')
+      ip = host['vm_ip'] || host['ip'].to_s
+      hostname = host[:vmhostname] || host.name
+      domain = get_domain_name(host)
+
+      if domain.nil? || domain.empty?
+        etc_hosts += "#{ip}\t#{hostname}\n"
+      else
+        etc_hosts += "#{ip}\t#{hostname}.#{domain} #{hostname}\n"
+      end
     end
 
-    hack_etc_hosts(hosts, {})
+    hosts.each do |host|
+      # Truncate the hosts file.
+      on(host, ': > /etc/hosts')
+      set_etc_hosts(host, etc_hosts)
+    end
   end
 end
 
