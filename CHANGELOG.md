@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+  - The `facts_upload::server` class now supports PE 2016.4.10 -- 2016.4.latest
+    in addition to PE 2017.3.
+
+  - JAR plugin compatibility has been extended back to Puppet Server 2.6.
+
+
 ## [1.0.4] - 2018-11-03
 ### Fixed
 
@@ -67,6 +75,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Tests. Tests. Tests.
 
 
+[Unreleased]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.4...master
 [1.0.4]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/Sharpie/puppet-facts_upload/compare/1.0.1...1.0.2
