@@ -2,7 +2,7 @@
   "Version of Puppet Server to develop and test against"
   (get (System/getenv) "PUPPETSERVER_VERSION" "5.1.6"))
 
-(defproject sharpie/facts-upload "1.0.99"
+(defproject sharpie/facts-upload "1.1.0"
   :description "Puppet Server endpoint for the facts upload command"
   :license {:name "Apache License 2.0"
             :url "http://www.apache.org/licenses/LICENSE-2.0.html"}
