@@ -1,6 +1,13 @@
 Puppet Facts Upload
 ===================
 
+**NOTE:** The content in this module has been rendered obsolete as
+of Puppet 5.5.0 and Puppet Server 5.3.0 which re-added native
+support for the `puppet facts upload` command and associated
+API endpoint. The Puppet 5.x series reached End of Life
+at the end of January 2021. This module has been archived
+as it has reached the state of "finished software project".
+
 [![Build Status](https://travis-ci.org/Sharpie/puppet-facts_upload.svg?branch=master)](https://travis-ci.org/Sharpie/puppet-facts_upload)
 
 This project re-implements the `puppet facts upload` command and part of the
